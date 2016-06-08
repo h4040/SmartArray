@@ -138,11 +138,11 @@ SmartArray *trimSmartArray(SmartArray *smarty)
 			smarty->capacity = smarty->size;
 
 			printf("-> Trimmed SmartArray to size %i\n", smarty->capacity);
-
-			// return smarty pointer
-			return smarty;
 		}
 	}
+
+	// return smarty pointer
+	return smarty;
 }
 
 char *put(SmartArray *smarty, char *str)
