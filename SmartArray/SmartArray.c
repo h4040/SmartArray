@@ -89,6 +89,9 @@ SmartArray *expandSmartArray(SmartArray *smarty, int length)
 			// Set smarty array to point to newly created array
 			smarty->array = newArray;
 
+			// Update capacity
+			smarty->capacity = length;
+
 			printf("-> Expanded SmartArray to size %i\n", length);
 
 			// return smarty pointer
@@ -111,7 +114,7 @@ SmartArray *trimSmartArray(SmartArray *smarty)
 	if (smarty->capacity > smarty->size)
 	{
 		trimmedArray = malloc(smarty->size * sizeof(char*));
-		
+
 		if (!trimmedArray)
 		{
 			// Return null is malloc for trimmedArray failed
@@ -161,8 +164,8 @@ char *put(SmartArray *smarty, char *str)
 		// Get length of string
 		stringLength = strlen(str);
 
-		// Allocate space for new string
-		stringToInsert = malloc(stringLength * sizeof(char));
+		// Allocate space for new string. Add +1 because of \0 string terminator
+		stringToInsert = malloc(stringLength * sizeof(char) + 1);
 
 		if (!stringToInsert) // If malloc failed, return null.
 		{
@@ -182,7 +185,7 @@ char *put(SmartArray *smarty, char *str)
 		smarty->size = smarty->size + 1;
 
 		// return pointer to the newly inserted string
-		return stringToInsert;
+		return smarty->array[index];
 	}
 	else
 	{
@@ -203,9 +206,131 @@ char *get(SmartArray *smarty, int index)
 	return smarty->array[index];
 }
 
-char *set(SmartArray *smarty, int index, char *str);
+char *set(SmartArray *smarty, int index, char *str)
+{
+	char * newString;
+	int stringLength;
 
-char *insertElement(SmartArray *smarty, int index, char *str);
+	if (index < 0 || index > smarty->size || !smarty || !str)
+	{
+		return NULL;
+	}
+
+	stringLength = strlen(str);
+	// Add +1 to add space for \0 terminator
+	newString = malloc(stringLength * sizeof(char) + 1);
+
+	if (!newString)
+	{
+		// return null if malloc failed for new array.
+		return NULL;
+	}
+
+	strcpy(newString, str);
+
+	// free old string - Why doesn't this work?
+	free(smarty->array[index]);
+
+	// Insert new string into smarty's array
+	smarty->array[index] = newString;
+
+	// Return pointer to newly inserted string
+	return smarty->array[index];
+}
+
+char *insertElement(SmartArray *smarty, int index, char *str)
+{
+	char * stringToInsert;
+	char ** tempArray;
+	int newCapacity;
+	int stringLength;
+	int elementsToCopy;
+	int i;
+
+	if (!smarty || !str)
+		return NULL;
+
+	if (smarty->size >= smarty->capacity)
+	{
+		// expand capacity before inserting string, if size == capacity
+		newCapacity = smarty->capacity * 2 + 1;
+		smarty = expandSmartArray(smarty, newCapacity);
+	}
+
+	// Get length of string
+	stringLength = strlen(str);
+
+	// Allocate space for new string. Add +1 because of \0 string terminator
+	stringToInsert = malloc(stringLength * sizeof(char) + 1);
+
+	if (!stringToInsert) // If malloc failed, return null.
+		return NULL;
+
+	// Copy string into new array
+	strcpy(stringToInsert, str);
+
+	// If index is greater than current size of array, insert into first empty element
+	if (index > smarty->size)
+	{
+		//smarty->array[smarty->size] = stringToInsert;
+		put(smarty, stringToInsert);
+	}
+	else
+	{
+		// copy elements that are past the insertion point (index)
+		elementsToCopy = smarty->size - index;
+
+		// malloc tempArray.
+		tempArray = malloc(elementsToCopy * sizeof(char*));
+
+		if (!tempArray)
+			return NULL;
+
+		// Copy from smart array to tempArray
+		for (i = 0; i < smarty->size; i++)
+		{
+			//smarty->array[i + index] ... think about this one for a sec
+			// we want to make a copy from index till smarty->size, but also insert into tempArray beginning at [0]
+			stringLength = strlen(smarty->array[i + index]);
+			stringToInsert = malloc(stringLength * sizeof(char) + 1);
+			stringToInsert = strcpy(smarty->array[i + index], stringToInsert);
+			tempArray[i] = smarty->array[i + index];
+		}
+
+		for (i = 0; i < smarty->size; i++)
+		{
+
+		}
+
+		// Free old elements
+		for (i = index; i < smarty->size; i++)
+		{
+			free(smarty->array[i]);
+		}
+
+		// copy the new string into [index]
+		smarty->array[index] = stringToInsert;
+
+		// Update smarty-> size to + 1
+		smarty->size = smarty->size + 1;
+
+		// copy contents of tempArray into smarty's array
+		for (i = 0; i < smarty->size; i++)
+		{
+			stringLength = strlen(tempArray[i]);
+			stringToInsert = malloc( stringLength * sizeof(char) );
+			stringToInsert = strcpy(stringToInsert, tempArray[i]);
+			smarty->array[index + 1 + i] = stringToInsert;
+
+			//smarty->array[index + 1 + i] = tempArray[i];
+			printf("Copy from tempArray into smart array: %s\n", smarty->array[index + 1 + i]);
+		}
+
+		// return newly inserted string
+		return smarty->array[index];
+	}
+
+}
 
 int removeElement(SmartArray *smarty, int index);
 
@@ -245,17 +370,24 @@ double hoursSpent(void);
 main()
 {
 	int size;
-	char firstName[] = { 'T', 'o', 'n', 'n', 'y','\0' };
-	char lastName[] = { 'B', 'o', 'e', 's','e','n','b','a','e','k', '\0' };
+	char * firstString = "first string";
+	char * secondString = "second string";
+	char * insertString = "insertString";
 	char * aString = "Hi I'm a string, but I don't exist in C baaaaa";
 	char * getString;
+	char * putString = "Hello I'm a new string";
 
 	SmartArray * smart = createSmartArray(50);
 
 	printf("Calling put() to insert string...\n");
-	put(smart, firstName);
-	put(smart, lastName);
-	put(smart, aString);
+	put(smart, firstString);
+	put(smart, secondString);
+
+	insertElement(smart, 0, insertString);
+	printf("Inserted new string at index 0. Contents of array:\n");
+	printSmartArray(smart);
+
+
 
 	expandSmartArray(smart, 70);
 
@@ -267,9 +399,27 @@ main()
 
 	size = getSize(smart);
 	printf("SmartArray's capacity after trimming: %i\n", size);
-	
+
 	getString = get(smart, 1);
 	printf("String at index 1: %s\n", getString);
+
+	set(smart, 0, putString);
+	printf("Put new string at index 1. Contents of array:\n");
+	printSmartArray(smart);
+
+
+
+	printf("Destroying smart array...\n");
+	smart = destroySmartArray(smart);
+
+	if (smart != NULL)
+	{
+		printf("Smart array was not destroyed\n");
+	}
+	else
+	{
+		printf("Smart array was succesfully destroyed\n");
+	}
 
 	system("pause");
 }
