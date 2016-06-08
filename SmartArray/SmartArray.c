@@ -154,47 +154,44 @@ char *put(SmartArray *smarty, char *str)
 
 	if (smarty && str) // if smarty and str is not null.
 	{
-		if (smarty->size >= smarty->capacity)
-		{
-			// expand capacity before inserting string, if size == capacity
-			newCapacity = smarty->capacity * 2 + 1;
-			smarty = expandSmartArray(smarty, newCapacity);
-		}
-
-		// Get length of string
-		stringLength = strlen(str);
-
-		// Allocate space for new string. Add +1 because of \0 string terminator
-		stringToInsert = malloc(stringLength * sizeof(char) + 1);
-
-		if (!stringToInsert) // If malloc failed, return null.
-		{
-			return NULL;
-		}
-
-		// Copy string into new array
-		strcpy(stringToInsert, str);
-
-		// Get the first empty cell
-		index = smarty->size;
-
-		// Insert new string into smarty's internal array
-		smarty->array[index] = stringToInsert;
-
-		// increase smarty's size
-		smarty->size = smarty->size + 1;
-
-		// return pointer to the newly inserted string
-		return smarty->array[index];
-	}
-	else
-	{
 		// if smarty or str is null, return null
 		return NULL;
 	}
 
+	if (smarty->size >= smarty->capacity)
+	{
+		// expand capacity before inserting string, if size == capacity
+		newCapacity = smarty->capacity * 2 + 1;
+		smarty = expandSmartArray(smarty, newCapacity);
+	}
 
+	// Get length of string
+	stringLength = strlen(str);
+
+	// Allocate space for new string. Add +1 because of \0 string terminator
+	stringToInsert = malloc(stringLength * sizeof(char) + 1);
+
+	if (!stringToInsert) // If malloc failed, return null.
+	{
+		return NULL;
+	}
+
+	// Copy string into new array
+	strcpy(stringToInsert, str);
+
+	// Get the first empty cell
+	index = smarty->size;
+
+	// Insert new string into smarty's internal array
+	smarty->array[index] = stringToInsert;
+
+	// increase smarty's size
+	smarty->size = smarty->size + 1;
+
+	// return pointer to the newly inserted string
+	return smarty->array[index];
 }
+
 
 char *get(SmartArray *smarty, int index)
 {
