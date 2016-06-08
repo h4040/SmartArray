@@ -152,7 +152,7 @@ char *put(SmartArray *smarty, char *str)
 	int index;
 	int newCapacity;
 
-	if (smarty && str) // if smarty and str is not null.
+	if (smarty == NULL || str == NULL) // if smarty and str is not null.
 	{
 		// if smarty or str is null, return null
 		return NULL;
@@ -230,6 +230,9 @@ char *set(SmartArray *smarty, int index, char *str)
 
 	// Insert new string into smarty's array
 	smarty->array[index] = newString;
+
+	// free newString
+	free(newString);
 
 	// Return pointer to newly inserted string
 	return smarty->array[index];
