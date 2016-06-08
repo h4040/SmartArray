@@ -287,25 +287,13 @@ char *insertElement(SmartArray *smarty, int index, char *str)
 		// Copy from smart array to tempArray
 		for (i = 0; i < smarty->size; i++)
 		{
-			// Get length of string in smart array
-			stringLength = strlen(smarty->array[i + index]);
-			// Malloc space for tempString
-			tempString = malloc(stringLength * sizeof(char) + 1);
-			// Copy string from smartArray to tempString
-			strcpy(tempString, smarty->array[i + index]);
-			// Assign tempString pointer to tempArray
-			tempArray[i] = tempString;
+			// tempArray holds pointers to contents of smarty's array
+			tempArray[i] = smarty->array[i + index];
 		}
 
 		for (i = 0; i < elementsToCopy; i++)
 		{
 			printf("Content of tempArray: %s\n", tempArray[i]);
-		}
-
-		// Free old elements
-		for (i = index; i < smarty->size; i++)
-		{
-			free(smarty->array[i]);
 		}
 
 		// copy the new string into [index]
@@ -314,25 +302,13 @@ char *insertElement(SmartArray *smarty, int index, char *str)
 		// Update smarty-> size to + 1
 		smarty->size = smarty->size + 1;
 
-		// copy contents of tempArray into smarty's array
+		// copy pointers from tempArray into smarty's array
 		for (i = 0; i < elementsToCopy; i++)
 		{
-			// Get length of string in tempArray
-			stringLength = strlen(tempArray[i]);
-			// Malloc space for tempString
-			tempString = malloc(stringLength * sizeof(char) + 1);
-			// Copy string from tempString to smartArray
-			strcpy(tempString, tempArray[i]);
-			// Assign tempString to smartArray
-			smarty->array[index + 1 + i] = tempString;
+			smarty->array[index + 1 + i] = tempArray[i];
 		}
 
 		// Free temp array
-		for (i = 0; i < elementsToCopy; i++)
-		{
-			free(tempArray[i]);
-		}
-
 		free(tempArray);
 
 		// return newly inserted string
