@@ -225,7 +225,7 @@ char *set(SmartArray *smarty, int index, char *str)
 
 	strcpy(newString, str);
 
-	// free old string - Why doesn't this work?
+	// free old string
 	free(smarty->array[index]);
 
 	// Insert new string into smarty's array
