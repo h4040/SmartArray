@@ -92,7 +92,7 @@ SmartArray *expandSmartArray(SmartArray *smarty, int length)
 			// Update capacity
 			smarty->capacity = length;
 
-			printf("-> Expanded SmartArray to size %i\n", length);
+			printf("-> Expanded SmartArray to size %i\n", smarty->capacity);
 
 			// return smarty pointer
 			return smarty;
