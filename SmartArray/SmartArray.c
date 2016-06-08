@@ -231,9 +231,6 @@ char *set(SmartArray *smarty, int index, char *str)
 	// Insert new string into smarty's array
 	smarty->array[index] = newString;
 
-	// free newString
-	free(newString);
-
 	// Return pointer to newly inserted string
 	return smarty->array[index];
 }
