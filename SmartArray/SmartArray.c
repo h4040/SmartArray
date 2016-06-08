@@ -20,7 +20,7 @@ SmartArray * createSmartArray(int length)
 			lengthToUse = length;
 		}
 
-		// Allocate space for internal array using DEFAULT_INIT_LEN number of elements
+		// Allocate space for internal array 
 		smarty->array = malloc(lengthToUse * sizeof(char*));
 
 		if (smarty)
@@ -32,12 +32,12 @@ SmartArray * createSmartArray(int length)
 		}
 		else
 		{
-			return 0;
+			return NULL;
 		}
 	}
-	else // If smarty malloc failed, return 0
+	else // If smarty malloc failed, return NULL
 	{
-		return 0;
+		return NULL;
 	}
 }
 
