@@ -158,7 +158,7 @@ char *put(SmartArray *smarty, char *str)
 		return NULL;
 	}
 
-	if (smarty->size >= smarty->capacity)
+	if (getSize(smarty) >= smarty->capacity)
 	{
 		// expand capacity before inserting string, if size == capacity
 		newCapacity = smarty->capacity * 2 + 1;
@@ -180,13 +180,13 @@ char *put(SmartArray *smarty, char *str)
 	strcpy(stringToInsert, str);
 
 	// Get the first empty cell
-	index = smarty->size;
+	index = getSize(smarty);
 
 	// Insert new string into smarty's internal array
 	smarty->array[index] = stringToInsert;
 
 	// increase smarty's size
-	smarty->size = smarty->size + 1;
+	smarty->size = getSize(smarty) + 1;
 
 	// return pointer to the newly inserted string
 	return smarty->array[index];
@@ -326,7 +326,7 @@ int removeElement(SmartArray *smarty, int index)
 	}
 
 	// if index exceeds the array size, nothing is removed from the array
-	if (index > (smarty->size - 1))
+	if (index > (getSize(smarty) - 1))
 	{
 		return 0;
 	}
@@ -335,7 +335,7 @@ int removeElement(SmartArray *smarty, int index)
 	If the last element is being removed, 
 	there is no need to shift the remaining elements in the array around.
 	*/
-	if (index == smarty->size - 1)
+	if (index == getSize(smarty) - 1)
 	{
 		free(smarty->array[index]);
 
@@ -345,7 +345,7 @@ int removeElement(SmartArray *smarty, int index)
 	else
 	{
 		// Calculate how many elements to shift one space to the left
-		elementsToMove = smarty->size - index - 1;
+		elementsToMove = getSize(smarty) - index - 1;
 
 		// allocate space for tempArray
 		tempArray = malloc(elementsToMove * sizeof(char*));
@@ -386,7 +386,7 @@ int removeElement(SmartArray *smarty, int index)
 		free(tempArray);
 
 		// free last element that has now been shifted to the left by one element
-		elementToFree = smarty->size - 1;
+		elementToFree = getSize(smarty) - 1;
 		free(smarty->array[elementToFree]);
 
 		// update size
@@ -413,13 +413,13 @@ void printSmartArray(SmartArray *smarty)
 {
 	int i;
 
-	if (!smarty || smarty->size <= 0)
+	if (!smarty || getSize(smarty) <= 0)
 	{
 		printf("(empty array)\n");
 	}
 	else
 	{
-		for (i = 0; i < smarty->size; i++)
+		for (i = 0; i < getSize(smarty); i++)
 		{
 			printf("%s\n", smarty->array[i]);
 		}
@@ -436,7 +436,7 @@ double hoursSpent(void)
 	return 7.0;
 }
 
-mainASD()
+main()
 {
 	int size;
 	char * firstString = "first string";
@@ -493,13 +493,13 @@ mainASD()
 	printf("Destroying smart array...\n");
 	smart = destroySmartArray(smart);
 
-	if (smart != NULL)
+	if (smart == NULL)
 	{
-		printf("Smart array was not destroyed\n");
+		printf("Smart array was succesfully destroyed\n");
 	}
 	else
 	{
-		printf("Smart array was succesfully destroyed\n");
+		printf("Smart array was not destroyed\n");
 	}
 
 	system("pause");
