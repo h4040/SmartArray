@@ -1,0 +1,98 @@
+-> Created new SmartArray of size 10.
+-> Created new SmartArray of size 10.
+
+-- SMART ARRAY 1: --
+Hanna
+Christopher
+John
+Richie
+Andres
+Kexin
+Sandesh
+Mohammad
+
+-- SMART ARRAY 2 (First Names): --
+Mohammad
+Sandesh
+Kexin
+Andres
+Richie
+John
+Christopher
+Hanna
+
+-- SMART ARRAY 2 (Last Names): --
+Ahmadian
+Sharma
+Liao
+Posadas
+Wales
+Lien
+Sipes
+Reed
+
+-- COMBINED ARRAYS (First and Last Names): --
+Mohammad Ahmadian
+Sandesh Sharma
+Kexin Liao
+Andres Posadas
+Richie Wales
+John Lien
+Christopher Sipes
+Hanna Reed
+
+Adding Mohammad to smarty1 ...
+Adding Sandesh to smarty1 ...
+-> Expanded SmartArray to size 21.
+Adding Kexin to smarty1 ...
+Adding Andres to smarty1 ...
+Adding Richie to smarty1 ...
+Adding John to smarty1 ...
+Adding Christopher to smarty1 ...
+Adding Hanna to smarty1 ...
+
+-- SMART ARRAY 1: --
+Hanna
+Christopher
+John
+Richie
+Andres
+Kexin
+Sandesh
+Mohammad
+Mohammad
+Sandesh
+Kexin
+Andres
+Richie
+John
+Christopher
+Hanna
+
+-- SMART ARRAY 1: --
+List of Names:
+Hanna
+Christopher
+John
+Richie
+Andres
+Kexin
+Sandesh
+Mohammad
+Mohammad
+Sandesh
+Kexin
+Andres
+Richie
+John
+Christopher
+Hanna
+
+-- SMART ARRAY 1: --
+(empty array)
+
+-- SMART ARRAY 1: --
+(empty array)
+
+-- SMART ARRAY 2: --
+(empty array)
