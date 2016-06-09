@@ -291,11 +291,6 @@ char *insertElement(SmartArray *smarty, int index, char *str)
 			tempArray[i] = smarty->array[i + index];
 		}
 
-		for (i = 0; i < elementsToCopy; i++)
-		{
-			printf("Content of tempArray: %s\n", tempArray[i]);
-		}
-
 		// copy the new string into [index]
 		smarty->array[index] = stringToInsert;
 
@@ -316,7 +311,76 @@ char *insertElement(SmartArray *smarty, int index, char *str)
 	}
 }
 
-int removeElement(SmartArray *smarty, int index);
+int removeElement(SmartArray *smarty, int index)
+{
+	int elementsToMove;
+	int i;
+	char ** tempArray;
+	char * tempString;
+	int stringLength;
+
+	if (!smarty)
+	{
+		return 0;
+	}
+
+	// if index exceeds the array size, nothing is removed from the array
+	if (index > (smarty->size - 1))
+	{
+		return 0;
+	}
+	
+	// remove element
+	free(smarty->array[index]);
+
+	// shift elements to the left
+	elementsToMove = smarty->size - index - 1;
+
+	// allocate space for tempArray
+	tempArray = malloc(elementsToMove * sizeof(char*));
+
+	if (!tempArray)
+	{
+		return 0;
+	}
+
+	// copy elements to the right of index into tempArray.
+	// Make a copy of the strings, so that we can free() the unneeded element at the end of the array
+	for (i = 0; i < elementsToMove; i++)
+	{
+		// Get length of string
+		stringLength = strlen(smarty->array[i + index + 1]);
+		// Malloc space for string
+		tempString = malloc(stringLength * sizeof(char) + 1);
+
+		if (!tempString)
+			return 0;
+
+		// Make a copy of the string to move into tempArray
+		strcpy(tempString, (smarty->array[i + index + 1]) );
+
+		// Copy string into tempArray
+		tempArray[i] = tempString;
+	}
+
+	// Copy elements from tempArray into smart array
+	for (i = 0; i < elementsToMove; i++)
+	{
+		smarty->array[i + index] = tempArray[i];
+	}
+
+	// free tempArray
+	free(tempArray);
+
+	// free last element that has now been shifted to the left by one element
+	free(smarty->array[ (smarty->size - 1) ]);
+
+	// update size
+	smarty->size -= 1;
+
+	// return 1 if successfully removed element
+	return 1;
+}
 
 int getSize(SmartArray *smarty)
 {
@@ -356,54 +420,61 @@ main()
 	int size;
 	char * firstString = "first string";
 	char * secondString = "second string";
+	char * thirdString = "third string";
 	char * insertString = "insertString";
 	char * aString = "Hi I'm a string, but I don't exist in C baaaaa";
 	char * getString;
 	char * putString = "Hello I'm a new string";
 
-	SmartArray * smart = createSmartArray(50);
+	SmartArray * smart = createSmartArray(10);
 
-	printf("Calling put() to insert string...\n");
+	printf("Calling put() to insert strings...\n");
 	put(smart, firstString);
 	put(smart, secondString);
+	put(smart, thirdString);
 
-	insertElement(smart, 0, insertString);
-	printf("Inserted new string at index 0. Contents of array:\n");
+	removeElement(smart, 1);
+	printf("Array contents after removing index 1:\n");
 	printSmartArray(smart);
 
 
-
-	expandSmartArray(smart, 70);
-
-	printf("Contents of SmartArray:\n");
-	printSmartArray(smart);
-
-	printf("Trimming SmartArray:\n");
-	trimSmartArray(smart);
-
-	size = getSize(smart);
-	printf("SmartArray's capacity after trimming: %i\n", size);
-
-	getString = get(smart, 1);
-	printf("String at index 1: %s\n", getString);
-
-	set(smart, 1, putString);
-	printf("Put new string at index 1. Contents of array:\n");
-	printSmartArray(smart);
+	//insertElement(smart, 0, insertString);
+	//printf("Inserted new string at index 0. Contents of array:\n");
+	//printSmartArray(smart);
 
 
 
-	printf("Destroying smart array...\n");
-	smart = destroySmartArray(smart);
+	//expandSmartArray(smart, 70);
 
-	if (smart != NULL)
-	{
-		printf("Smart array was not destroyed\n");
-	}
-	else
-	{
-		printf("Smart array was succesfully destroyed\n");
-	}
+	//printf("Contents of SmartArray:\n");
+	//printSmartArray(smart);
+
+	//printf("Trimming SmartArray:\n");
+	//trimSmartArray(smart);
+
+	//size = getSize(smart);
+	//printf("SmartArray's capacity after trimming: %i\n", size);
+
+	//getString = get(smart, 1);
+	//printf("String at index 1: %s\n", getString);
+
+	//set(smart, 1, putString);
+	//printf("Put new string at index 1. Contents of array:\n");
+	//printSmartArray(smart);
+
+
+
+	//printf("Destroying smart array...\n");
+	//smart = destroySmartArray(smart);
+
+	//if (smart != NULL)
+	//{
+	//	printf("Smart array was not destroyed\n");
+	//}
+	//else
+	//{
+	//	printf("Smart array was succesfully destroyed\n");
+	//}
 
 	system("pause");
 }
