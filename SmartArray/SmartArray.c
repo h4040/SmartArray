@@ -45,14 +45,18 @@ SmartArray *destroySmartArray(SmartArray *smarty)
 {
 	int i;
 
-	for (i = 0; i < smarty->size; i++)
+	if (smarty != NULL)
 	{
-		free(smarty->array[i]);
+		for (i = 0; i < smarty->size; i++)
+		{
+			free(smarty->array[i]);
+		}
+
+		free(smarty);
 	}
 
-	free(smarty);
-
 	return NULL;
+
 }
 
 SmartArray *expandSmartArray(SmartArray *smarty, int length)
@@ -436,7 +440,7 @@ double hoursSpent(void)
 	return 7.0;
 }
 
-main()
+mainASD()
 {
 	int size;
 	char * firstString = "first string";
