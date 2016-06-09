@@ -411,9 +411,15 @@ void printSmartArray(SmartArray *smarty)
 	}
 }
 
-double difficultyRating(void);
+double difficultyRating(void)
+{
+	return 3.0;
+}
 
-double hoursSpent(void);
+double hoursSpent(void)
+{
+	return 7.0;
+}
 
 main()
 {
